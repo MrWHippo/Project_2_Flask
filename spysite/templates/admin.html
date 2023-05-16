@@ -21,14 +21,12 @@
                 </tr>
             </thead>
             <tbody>
+                {% for object in history %}
                 <tr>
-                    <td>Jack</td>
-                    <td>11:00</td>
+                    <td>{{object[0}}</td>
+                    <td>{{object[1]}}</td>
                 </tr>
-                <tr>
-                    <td>Jill</td>
-                    <td>11:05</td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
