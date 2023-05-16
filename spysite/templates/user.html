@@ -12,8 +12,11 @@
 <body>
 
     <div class="container">
-        <h5>Welcome, {{username}}.</h5>
-        <p>{{count}} people were here before you.</p>
+        <h5>Welcome, {{username.title()}}.</h5>
+        <p>{{count-1}} people were here before you.</p>
+        <form action="/" method="" class="form-inline">
+            <button type="submit" class="btn btn-primary">Log Out</button>
+        </form>
     </div>
 
     <!-- Compiled and minified JavaScript -->

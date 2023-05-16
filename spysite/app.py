@@ -6,11 +6,12 @@ from wtforms import StringField, SubmitField
 app = Flask(__name__)
 app.config['SECRET_KEY']='tb3njt39h8fi20'
 
-login_history =[]
+login_history = []
 
 class LoginForm(FlaskForm):
     username = StringField("Username")
     submit = SubmitField("Log In")
+
 
 @app.route("/", methods=["GET","POST"])
 def login():
