@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper blue-grey darken-2">
+            <a href="" class="brand-logo center">The Vault</a>
+            <ul class="right">
+                <li><a href="/">Home</a></li>
+                <li><a href="/">Register</a></li>
+                <li><a href="/">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <form name="sign_in" action="/signin" method="POST" class="form-inline">
+            <label for="realname_input">Real Name: </label>
+            <input name="realname" id="realname_input" type="text">
+            <label for="username_input">Username: </label>
+            <input name="username" id="username_input" type="text">
+            <label for="password_input">Password: </label>
+            <input name="password" id="password_input" type="text">
+            <label for="confirm_password_input">Confirm Password: </label>
+            <input name="confirm_password" id="confirm_password_input" type="text">
+            <label for="access_code_input">Access Code: </label>
+            <input name="access_code" id="access_code_input" type="text">
+            <ul class="center">
+                <button name="submit" class="btn-primary">REGISTER</button>
+            </ul>
+        </form>
+    </div>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
