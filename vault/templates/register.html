@@ -14,23 +14,24 @@
             <a href="" class="brand-logo center">The Vault</a>
             <ul class="right">
                 <li><a href="/">Home</a></li>
-                <li><a href="/">Register</a></li>
-                <li><a href="/">Login</a></li>
+                <li><a href="/register">Register</a></li>
+                <li><a href="/login">Login</a></li>
             </ul>
         </div>
     </nav>
     <div class="container">
-        <form name="sign_in" action="/signin" method="POST" class="form-inline">
+        <form name="sign_in" action="" method="POST" class="form-inline">
+            {{form.csrf}}
             <label for="realname_input">Real Name: </label>
             <input name="realname" id="realname_input" type="text">
             <label for="username_input">Username: </label>
             <input name="username" id="username_input" type="text">
             <label for="password_input">Password: </label>
-            <input name="password" id="password_input" type="text">
+            <input name="password" id="password_input" type="password">
             <label for="confirm_password_input">Confirm Password: </label>
-            <input name="confirm_password" id="confirm_password_input" type="text">
+            <input name="confirmpassword" id="confirmpassword_input" type="password">
             <label for="access_code_input">Access Code: </label>
-            <input name="access_code" id="access_code_input" type="text">
+            <input name="accesscode" id="accesscode_input" type="text">
             <ul class="center">
                 <button name="submit" class="btn-primary">REGISTER</button>
             </ul>
