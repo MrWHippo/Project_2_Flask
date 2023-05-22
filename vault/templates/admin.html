@@ -4,28 +4,43 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Page</title>
+    <title>Admin View</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
 <body>
     <nav>
         <div class="nav-wrapper blue-grey darken-2">
-            <a href="" class="brand-logo center">The Vault</a>
+            <a href="" class="brand-logo center">Database</a>
             <ul class="right">
                 <li><a href="/">Home</a></li>
                 <li><a href="/login">Log in</a></li>
-                <li><a href="/logout">Log Out</a></li>
+                <li><a href="/">Log Out</a></li>
             </ul>
         </div>
     </nav>
-
     <div class="container">
-        <ul class="center">
-            <h6> Welcome to the Vault, {{realname}}.</h6>
-        </ul>
+        <h5>User data</h5>
+        <table class="striped">
+            <thread>
+                <tr>
+                    <th>Realname</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                </tr>
+            </thread>
+            <tbody>
+                {% for object in accounts %}
+                <tr>
+                    <td>{{object[0]}}</td>
+                    <td>{{object[1]}}</td>
+                    <td>{{object[2]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
     </div>
-    
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>

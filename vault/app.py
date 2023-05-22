@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "n238u2ifoid3opPo"
@@ -57,19 +58,18 @@ def register():
             if user == False:
                 if password == password2:
                     if accesscode == ACCESS_CODE:
-                        print("Access code correct, registering user.")
-                        new_user = User(realname, username, password)
-                        users[username] = new_user
-                        print("User registed and redirected to login.")
+                        print("Access code correct, registering user")
+                        insert_user(realname, username, password)
+                        print("User registed and redirected to login")
                         return redirect(url_for("login"))
                     else:
                         print("Access code incorrect.")
                         return render_template("register.html", form=form)
                 else:
-                    print("Passwords dont match.")
+                    print("Passwords do not match")
                     return render_template("register.html", form=form)
             else:
-                print(f"{username} is already in use.")
+                print(f"{username} is already in use")
                 return render_template("register.html", form=form)
     else:
         return render_template("register.html", form=form)
@@ -82,8 +82,12 @@ def login():
     if form.is_submitted():
         username = form.username.data
         password = form.password.data
-        user_info = users.get(username, None)
-        if user_info is not None and user_info.password == password:
+        user_info = get_user_info(username)
+        if username == "admin" and password == "admin":
+            print("Admin viewing db")
+            #print_db()
+            return render_template("admin.html", accounts= fetch_db())
+        if user_info is not None and user_info[1] == password:
             print("login successful")
             session["username"] = username
             return redirect(url_for("welcome"))
@@ -98,7 +102,7 @@ def welcome():
     username = session.get("username", None)
     if username is not None:
         try:
-            realname = users[username].realname
+            realname = get_user_info(username)[0]
         except:
             realname = "{couldn't get real name}"
         return render_template("welcome.html", realname=realname)
@@ -114,3 +118,66 @@ def logout():
 def PRINT(value):
     print(value)
 
+
+def insert_user(realname, username, password):
+    conn = sqlite3.connect("users.db")
+    print("Accessing Database")
+    print("Adding User to Database")
+    conn.execute(f"INSERT INTO USERS (REALNAME,USERNAME,PASSWORD) \
+                 VALUES ('{realname}','{username}','{password}')")
+    conn.commit()
+    print(f"{username} added")
+    conn.close()
+
+def get_user_info(username):
+    conn = sqlite3.connect("users.db")
+    print("Accessing Database")
+    print("Fetching User")
+    userinfo = conn.execute(f"SELECT realname,password from USERS where username='{username}'")
+    try:
+        for value in userinfo:
+            realname = value[0]
+            password = value[1]
+        conn.close()
+        print("User Found")
+        return [realname, password]
+    except:
+        conn.close()
+        return None
+
+def is_already_a_user(username):
+    conn = sqlite3.connect("users.db")
+    print("Accessing Database")
+    print("Searching for User")
+    userinfo = conn.execute(f"SELECT realname,password from USERS where username='{username}'")
+    for value in userinfo:
+        conn.close()
+        print("User Found")
+        return True
+    conn.close()
+    print("No user")
+    return False
+
+def print_db():
+    conn = sqlite3.connect("users.db")
+    print("printing db")
+    userinfo = conn.execute("SELECT realname, username, password from USERS")
+    for value in userinfo:
+        print("---------------------------")
+        print("Realname = ", value[0])
+        print("Username = ", value[1])
+        print("Password = ", value[2])
+    conn.close()
+
+def fetch_db():
+    userinfo_array = []
+    conn = sqlite3.connect("users.db")
+    print("Fetching db")
+    userinfo = conn.execute("SELECT realname, username, password from USERS")
+    for account in userinfo:
+        userinfo_array.append(account)
+    conn.close()
+    print("db fetched and returned")
+    return userinfo_array
+
+        

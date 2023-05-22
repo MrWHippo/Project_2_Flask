@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('test.db')
+conn = sqlite3.connect('users.db')
 print ("Opened database successfully")
 
 conn.execute('''CREATE TABLE USERS
@@ -10,5 +10,4 @@ conn.execute('''CREATE TABLE USERS
 
 print("Table created successfully")
 
-#conn.commit()
 conn.close()
