@@ -1,59 +1,102 @@
 
+#### From Graph
 
-def INPUT(graph):
-    pass
-##### input ref
-    def ingraph(value):
-    count = 0
-    for x in graph:
-        if x.value == value:
-            return count
-        else:
-            count += 1
-        return None
-
-    while inputting:
-        print("Enter # to exit")
-        Node = input("Enter Node: ")
-        if Node != "#":
-            neighbours = input("Enter neighbour/priority: ")
-            neighbours = neighbours.split(",")
-            for num in range(len(neighbours)):
-                neighbours[num] = neighbours[num].split("/")
-            
-            if ingraph(Node) != None:
-                    this_node = graph[ingraph(Node)]
-            else:
-                this_node = node(Node)
-                graph.append(this_node)
-                graph2.append(this_node.value)
-
-            for neighbour in neighbours:
-                if ingraph(neighbour[0]) != None:
-                    this_neighbour = graph[ingraph(neighbour[0])]
-                else:
-                    this_neighbour = node(neighbour[0])
-                    graph.append(this_neighbour)
-                    graph2.append(this_neighbour.value)
-
-                this_node.give_neighbour(this_neighbour)
-                this_node.give_neighbour_weight(-int(neighbour[1]))
-
-        else:
-            inputting = False
-
-Q = queue(len(graph)*10)
-Q.enqueue(graph[0], 0)
-
-while Q.is_empty()==False:
-    current = Q.dequeue()
-    if current[0].checkfinal() == False:
-        current[0].placeval = -current[1]
-        current[0].final = True
-        for neighbour in current[0].neighbours:
-            num = current[0].getplaceofweight(neighbour)
-            neighbour.placeval = current[0].placeval - int(current[0].weightofneighbours[num])
-            neighbour.priority = neighbour.placeval
-            Q.enqueue(neighbour, -neighbour.priority)
+class node():
+    def __init__(self, selfvalue):
+        self.value = selfvalue
+        self.neighbours = []
+        self.weightofneighbours = []
+        self.visited = False
+        self.parent = None
+        self.entry_time = None
+        self.exit_time = None
+        self.placeval = 0
+        self.priority = 0
+        self.final = False
         
-        print(current[0].value,  current[0].placeval)
+
+
+    def give_neighbour(self, neighbour):
+        self.neighbours.append(neighbour)
+
+    def get_neighbours(self):
+        return self.neighbours
+
+    def give_neighbour_weight(self, weight):
+        self.weightofneighbours.append(weight)
+
+    def getplaceofweight(self, searchnode):
+        count = -1
+        for node in self.neighbours:
+            count +=1
+            if node.value == searchnode.value:
+                return count
+        
+    def checkfinal(self):
+        return self.final
+
+#### from HeapPriorityQueueM
+class queue():
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.queue = [(None,None)] * capacity
+        self.head = 1
+        self.tail = 0
+        self.count = 0
+    
+    def enqueue(self, value, priority):
+        if self.tail + 1 <= self.capacity:
+            self.tail += 1
+            self.count += 1
+            self.queue[self.tail] = (value, priority)
+            location = self.tail
+            if self.queue[location//2][1] != None:
+                while self.queue[location][1] > self.queue[location//2][1]:
+                    temp = self.queue[location//2]
+                    self.queue[location//2] = self.queue[location]
+                    self.queue[location] = temp
+                    location //= 2
+                    if self.queue[location//2][1] == None:
+                        break
+
+    def dequeue(self):
+        dequeuevalue = self.queue[1]
+        if dequeuevalue[1] == None:
+            return "Error, Nothing in Queue."
+        self.queue[1] = self.queue[self.tail]
+        self.queue[self.tail] = (None, None)
+        location = 1
+        self.tail -= 1
+        if self.queue[location*2][1] != None:
+            while self.queue[location][1] < self.queue[self.__maxchild(location)][1]:
+                childlocation = self.__maxchild(location)
+                temp = self.queue[childlocation]
+                self.queue[childlocation] = self.queue[location]
+                self.queue[location] = temp
+                location = childlocation
+                if self.queue[location*2][1] == None:
+                    break
+        self.count -= 1
+        return dequeuevalue
+    
+    def __maxchild(self, location):
+        child1= self.queue[location*2]
+        child2 = self.queue[location*2 + 1]
+        if child2[1] == None:
+            return location*2
+        if child1[1] > child2[1]:
+            return location*2
+        else:
+            return (location*2 +1)
+
+    def top(self):
+        return self.queue[1]
+
+    def numinqueue(self):
+        return self.count
+
+    def printqueue(self):
+        return self.queue
+    
+    def is_empty(self):
+        return self.numinqueue() == 0

@@ -21,7 +21,19 @@
 
     <div class="container">
         <ul class="center">
-            <h6> Hello User.</h6>
+            <form name="graph-root" action="" method="POST" class="form-inline">
+                {{form.csrf}}
+                <label for start_input>Start: </label>
+                <input name="start" id="start_input" type="text">
+                <label for end_input>End: </label>
+                <input name="end" id="end_input" type="text">
+                <button name="submit" class="btn-primary">Calculate Shortest Path</button>
+            </form>
+        </ul>
+    </div>
+    <div class="container">
+        <ul class="center">
+            <h6>Shortest Distance: {{distance}}</h6>
         </ul>
     </div>
     <!-- Compiled and minified JavaScript -->
