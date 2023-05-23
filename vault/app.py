@@ -85,6 +85,7 @@ def login():
         user_info = get_user_info(username)
         if username == "admin" and password == "admin":
             print("Admin viewing db")
+            session["username"] = username
             #print_db()
             return render_template("admin.html", accounts= fetch_db())
         if user_info is not None and user_info[1] == password:
