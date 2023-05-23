@@ -13,6 +13,10 @@ app.secret_key = "njjrnbfjko39i"
 
 graph = []
 
+###
+inputarray = ["A","B","C","D","E"]
+neighboursarray = [["B","C"],["A","D"],["A"],["B","E"],["D"]]
+
 class adminloginForm(FlaskForm):
     username = StringField("username")
     password = StringField("password")
@@ -60,12 +64,9 @@ def ingraph(value):
 
 def define_graph(graph, inputarray, neighboursarray):
     graph2 = []
-    for x in inputarray:
-        Node = x
-        neighbours = neighboursarray
-        for num in range(len(neighbours)):
-                neighbours[num] = neighbours[num].split("/")
-            
+    for x in range(len(inputarray)):
+        Node = inputarray[x]
+        neighbours = neighboursarray[x]
         if ingraph(Node) != None:
                 this_node = graph[ingraph(Node)]
         else:
@@ -87,6 +88,7 @@ def define_graph(graph, inputarray, neighboursarray):
     return graph
 
 
+graph = define_graph(graph, inputarray, neighboursarray)
 
 def find_shortest(graph):
     Q = queue(len(graph)*10)
@@ -103,6 +105,7 @@ def find_shortest(graph):
                 Q.enqueue(neighbour, -neighbour.priority)
             
             print(current[0].value,  current[0].placeval)
+
 
 ### roots
 
@@ -143,7 +146,7 @@ def admin():
     else:
         return redirect(url_for("adminlogin"))
 
-@app.route("/shortest", methods=["POST","GET"])
+@app.route("/shortest", methods=["GET","POST"])
 def shortest():
     form = calculationForm()
     if form.is_submitted():
