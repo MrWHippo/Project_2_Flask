@@ -15,7 +15,7 @@ graph = []
 
 ###
 inputarray = ["A","B","C","D","E"]
-neighboursarray = [["B","C"],["A","D"],["A"],["B","E"],["D"]]
+neighboursarray = [[["B",2],["C",3]],[["A",2],["D",3]],[["A",3]],[["B",3],["E",4]],[["D",4]]]
 
 class adminloginForm(FlaskForm):
     username = StringField("username")
@@ -23,8 +23,8 @@ class adminloginForm(FlaskForm):
     submit = SubmitField("submit")
 
 class calculationForm(FlaskForm):
-    startnode = StringField("start")
-    endnode = StringField("end")
+    startnode = StringField("startnode")
+    endnode = StringField("endnode")
     submit = SubmitField("submit")
 
 
@@ -90,9 +90,11 @@ def define_graph(graph, inputarray, neighboursarray):
 
 graph = define_graph(graph, inputarray, neighboursarray)
 
-def find_shortest(graph):
+def find_shortest(graph, startingnode, destination):
+    answer = []
+    startingnode = find_node(startingnode)
     Q = queue(len(graph)*10)
-    Q.enqueue(graph[0],[0])
+    Q.enqueue(startingnode,0)
     while Q.is_empty()==False:
         current = Q.dequeue()
         if current[0].checkfinal() == False:
@@ -104,9 +106,26 @@ def find_shortest(graph):
                 neighbour.priority = neighbour.placeval
                 Q.enqueue(neighbour, -neighbour.priority)
             
-            print(current[0].value,  current[0].placeval)
+            print("current values:", current[0].value,  current[0].placeval)
+            ## not used yet
+            answer.append([current[0].value, current[0].placeval])
+            ###
+            if current[0].value == destination.upper():
+                return current[0].placeval
 
+def reset_nodes(graph):
+    for node in graph:
+        node.final = False
+        node.placeval = 0
+        node.priority = 0
 
+def find_node(searchnode):
+    count = 0
+    for node in graph:
+        count += 1
+        if node.value == searchnode.upper():
+            return node
+    return None
 ### roots
 
 @app.route("/adminlogin", methods=["GET","POST"])
@@ -149,20 +168,24 @@ def admin():
 @app.route("/shortest", methods=["GET","POST"])
 def shortest():
     form = calculationForm()
+    nodes = inputarray
     if form.is_submitted():
         startingnode = form.startnode.data
         destination = form.endnode.data
         print(startingnode)
         print(destination)
         if startingnode == None or destination == None:
-            return render_template("calculation.html",form=form, distance="Fill in both fields")
+            return render_template("calculation.html",form=form, distance="Fill in both fields", nodes=nodes)
         elif startingnode == destination:
-            return render_template("calculation.html",form=form, distance="Start and End must be Different")
+            return render_template("calculation.html",form=form, distance="Start and End must be Different", nodes=nodes)
         else:
-            try:
+            #try:
+                print("attempting shortest")
                 distance = find_shortest(graph,startingnode,destination)
-                return render_template("calculation.html",form=form, distance=distance)
-            except:
-                return render_template("calculation.html",form=form, distance="Error")
+                print("distance:",distance)
+                reset_nodes(graph)
+                return render_template("calculation.html",form=form, distance=distance, nodes=nodes)
+            #except:
+                return render_template("calculation.html",form=form, distance="Error", nodes=nodes)
     else:
-        return render_template("calculation.html", form=form,distance=0)
+        return render_template("calculation.html", form=form,distance=0, nodes=nodes)

@@ -18,15 +18,19 @@
             </ul>
         </div>
     </nav>
-
+    <div class="container">
+        <ul class="center">
+            <h6>Nodes: {{nodes}}</h6>
+        </ul>
+    </div>
     <div class="container">
         <ul class="center">
             <form name="graph-root" action="" method="POST" class="form-inline">
                 {{form.csrf}}
-                <label for start_input>Start: </label>
-                <input name="start" id="start_input" type="text">
-                <label for end_input>End: </label>
-                <input name="end" id="end_input" type="text">
+                <label for startnode_input>Start: </label>
+                <input name="startnode" id="startnode_input" type="text">
+                <label for endnode_input>End: </label>
+                <input name="endnode" id="endnode_input" type="text">
                 <button name="submit" class="btn-primary">Calculate Shortest Path</button>
             </form>
         </ul>
