@@ -27,6 +27,10 @@ class calculationForm(FlaskForm):
     endnode = StringField("endnode")
     submit = SubmitField("submit")
 
+class admineditForm(FlaskForm):
+    edge = StringField("node")
+    weight = StringField("weight")
+    submit = SubmitField("Confirm Edit")
 
 def is_admin(username):
     for user in validadmins:
@@ -52,14 +56,14 @@ def correctpassword(username, password):
 
 #### graph stuff
 
-def ingraph(value):
+def ingraph(graph,searchvalue):
     count = 0
     for x in graph:
-        if x.value == value:
+        if x.value == searchvalue:
             return count
         else:
             count += 1
-        return None
+    return None
 
 
 def define_graph(graph, inputarray, neighboursarray):
@@ -67,16 +71,16 @@ def define_graph(graph, inputarray, neighboursarray):
     for x in range(len(inputarray)):
         Node = inputarray[x]
         neighbours = neighboursarray[x]
-        if ingraph(Node) != None:
-                this_node = graph[ingraph(Node)]
+        if ingraph(graph, Node) != None:
+                this_node = graph[ingraph(graph,Node)]
         else:
             this_node = node(Node)
             graph.append(this_node)
             graph2.append(this_node.value)
 
         for neighbour in neighbours:
-            if ingraph(neighbour[0]) != None:
-                this_neighbour = graph[ingraph(neighbour[0])]
+            if ingraph(graph, neighbour[0]) != None:
+                this_neighbour = graph[ingraph(graph,neighbour[0])]
             else:
                 this_neighbour = node(neighbour[0])
                 graph.append(this_neighbour)
@@ -104,9 +108,9 @@ def find_shortest(graph, startingnode, destination):
                 num = current[0].getplaceofweight(neighbour)
                 neighbour.placeval = current[0].placeval - int(current[0].weightofneighbours[num])
                 neighbour.priority = neighbour.placeval
+                print(f"Enqueue ={neighbour.value} from {current[0].value}")
                 Q.enqueue(neighbour, -neighbour.priority)
             
-            print("current values:", current[0].value,  current[0].placeval)
             ## not used yet
             answer.append([current[0].value, current[0].placeval])
             ###
@@ -126,6 +130,26 @@ def find_node(searchnode):
         if node.value == searchnode.upper():
             return node
     return None
+
+def node_valid(inputarray, searchnode):
+    for node in inputarray:
+        if node == searchnode:
+            return True
+    return False
+
+def node_location(inputarray, searchnode):
+    count = 0
+    for node in inputarray:
+        count += 1
+        if node == searchnode:
+            return count
+    return None
+
+def change_weights(neighboursarray,node1,node2,weight):
+    for x in range(len(neighboursarray)):
+        if neighboursarray[x] == node1:
+            pass
+            
 ### roots
 
 @app.route("/adminlogin", methods=["GET","POST"])
@@ -161,7 +185,19 @@ def logout():
 def admin():
     username = session.get("username", None)
     if username is not None:
-        return redirect(url_for("admin"))
+        form = admineditForm()
+        if form.is_submitted():
+            edges = form.edge.data
+            edges = edges.split(">")
+            weight = form.weight.data
+            if node_valid(inputarray, node[0]) and node_valid(inputarray, node[1]):
+                num1 = node_location(node[0])
+                num2 = node_location(node[1])
+                neighbours = neighboursarray[num1]
+            else:
+                return redirect(url_for("admin", form=form))
+        else:
+            return redirect(url_for("admin", form=form))
     else:
         return redirect(url_for("adminlogin"))
 

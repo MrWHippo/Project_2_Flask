@@ -25,6 +25,18 @@
             <h6> Welcome Admin.</h6>
         </ul>
     </div>
+    <div class="container">
+        <ul class="center">
+            <form name="graph-root" action="" method="POST" class="form-inline">
+                {{form.csrf}}
+                <label for edge_input>Edge (eg. C>D or A>B): </label>
+                <input name="edge" id="edge_input" type="text">
+                <label for weight_input>Node Weight: </label>
+                <input name="weight" id="weight_input" type="text">
+                <button name="submit" class="btn-primary">Confirm Edit</button>
+            </form>
+        </ul>
+    </div>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
