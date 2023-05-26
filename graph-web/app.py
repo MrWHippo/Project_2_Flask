@@ -145,10 +145,18 @@ def node_location(inputarray, searchnode):
             return count
     return None
 
-def change_weights(neighboursarray,node1,node2,weight):
-    for x in range(len(neighboursarray)):
-        if neighboursarray[x] == node1:
+def change_weights(inputarray,neighboursarray,node1,node2,weight):
+    node1location = node_location(inputarray, node1)
+    node2location = node_location(inputarray, node2)
+
+    for x in range(len(neighboursarray[node1location])):
+        if neighboursarray[node1location][x] == node1:
             pass
+    
+    for x in range(len(neighboursarray[node2location])):
+        if neighboursarray[node2location][x] == node2:
+            pass
+
             
 ### roots
 
