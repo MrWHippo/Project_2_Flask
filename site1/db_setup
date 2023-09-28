@@ -1,0 +1,18 @@
+import sqlite3
+
+conn = sqlite3.connect("userdata.db")
+c = conn.cursor()
+
+def create():
+    c.execute('''
+            CREATE TABLE users
+            ([username] TEXT PRIMARY KEY,
+            [password] TEXT,
+            [real_name] TEXT,
+            [city] TEXT,
+            [last_login] DATETIME,
+            [account_creation_date] DATETIME)
+            ''')
+    conn.commit()
+
+create()
